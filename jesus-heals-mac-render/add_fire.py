@@ -5,7 +5,9 @@ B=os.path.dirname(os.path.abspath(__file__))
 SRC=sys.argv[1]; OUT=SRC.replace("(HQ).mp4","(HQ fire).mp4")
 URL="https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1ab7a-b2cf-7234-adcd-c21d256ae3c3.mp3"
 FIRE=B+"/fireplace_crackle.mp3"
-if not os.path.exists(FIRE): urllib.request.urlretrieve(URL,FIRE)
+if not os.path.exists(FIRE):
+    req=urllib.request.Request(URL,headers={"User-Agent":"Mozilla/5.0"})
+    open(FIRE,"wb").write(urllib.request.urlopen(req).read())
 TARGET=float(os.environ.get("FIRE_LUFS","-40"))
 r=subprocess.run(['ffmpeg','-hide_banner','-nostats','-i',FIRE,'-af','ebur128','-f','null','-'],capture_output=True,text=True).stderr
 I=float(re.findall(r"I:\s+(-?[\d.]+) LUFS",r)[-1]); gain=TARGET-I
