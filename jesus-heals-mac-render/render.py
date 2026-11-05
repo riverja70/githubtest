@@ -28,7 +28,7 @@ events=[(A+"title.png",0,9,0,2)]
 events+=[(A+f"v{i:02d}.png",60+540*i,25,2,2) for i in range(20)]
 kinds=["sub","share","amen"]
 events+=[(A+f"cta_{kinds[k%3]}.png",180+1620*k,8,1,1.5) for k in range(7)]
-args=['ffmpeg','-y','-v','error','-stats','-stream_loop','-1','-i',B+'/loop_v3.mp4',
+args=['ffmpeg','-y','-v','error','-stats','-stream_loop','-1','-i',B+'/'+os.environ.get('LOOP','loop_v3.mp4'),
       '-loop','1','-framerate','24','-t',f"{TOT:.2f}",'-i',A+'dusk.png']
 for e in events: args+=['-loop','1','-framerate','24','-t',str(e[2]),'-i',e[0]]
 args+=['-i',AUD]
