@@ -29,10 +29,13 @@ events+=[(A+f"v{i:02d}.png",60+540*i,25,2,2) for i in range(20)]
 kinds=["sub","share","amen"]
 events+=[(A+f"cta_{kinds[k%3]}.png",180+1620*k,8,1,1.5) for k in range(7)]
 args=['ffmpeg','-y','-v','error','-stats','-stream_loop','-1','-i',B+'/'+os.environ.get('LOOP','loop_v3.mp4'),
-      '-loop','1','-framerate','24','-t',f"{TOT:.2f}",'-i',A+'dusk.png']
+      '-loop','1','-framerate','24','-t',f"{TOT:.2f}",'-i',A+os.environ.get('DUSK','dusk.png')]
 for e in events: args+=['-loop','1','-framerate','24','-t',str(e[2]),'-i',e[0]]
 args+=['-i',AUD]
-fc=["[0:v]scale=1920:1080:flags=lanczos,setsar=1,fps=24,format=yuv420p[b0]",
+PLATE=os.environ.get('PLATE')  # optional sharp city plate (RGBA, loop size) composited into the windows
+if PLATE: args+=['-loop','1','-framerate','24','-i',PLATE]
+SRCV='lp' if PLATE else '0:v'
+fc=([f"[{len(events)+3}:v]format=rgba[pl]","[0:v][pl]overlay=0:0:eof_action=repeat[lp]"] if PLATE else [])+[f"[{SRCV}]scale=1920:1080:flags=lanczos,setsar=1,fps=24,format=yuv420p[b0]",
     f"[1:v]format=rgba,fade=t=in:st=0:d={TOT:.2f}:alpha=1[dk]",
     "[b0][dk]overlay=0:0:eof_action=pass[b1]"]
 cur="b1"
