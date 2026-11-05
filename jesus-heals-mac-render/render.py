@@ -49,6 +49,23 @@ fc=pre+[f"[{SRCV}]scale=1920:1080:flags=lanczos,setsar=1,fps=24,format=yuv420p[b
     f"[1:v]format=rgba,fade=t=in:st=0:d={TOT:.2f}:alpha=1[dk]",
     "[b0][dk]overlay=0:0:eof_action=pass[b1]"]
 cur="b1"
+# --- gentle camera moments (ZOOM=1): slow pull-back over the first 40s, then every 9 min a slow drift into a close-up and back
+if os.environ.get('ZOOM','1')!='0':
+    ZOFF=float(os.environ.get('ZOFF','0'))
+    T="(in/24)"
+    def sm(a,b):  # smoothstep 0->1 between a and b
+        u=f"clip(({T}-{a})/{b-a},0,1)"; return f"({u}*{u}*(3-2*{u}))"
+    targets=[(0.47,0.80),(0.55,0.32),(0.10,0.62),(0.80,0.66)]  # Bible+candle, city/Empire State, fireplace, lantern+tea
+    zt=["0.12*(1-"+sm(0,40)+")"]; fx=["0"]; fy=["0"]
+    for i in range(20):
+        s=330+540*i-ZOFF; tx,ty=targets[i%4]
+        if s<0 or s+46>TOT-30: continue
+        env=f"({sm(s,s+14)}-{sm(s+32,s+46)})"
+        zt.append(f"0.20*{env}"); fx.append(f"{tx-0.5}*{env}"); fy.append(f"{ty-0.5}*{env}")
+    Z="(1+"+"+".join(zt)+")"; FX="(0.5+"+"+".join(fx)+")"; FY="(0.5+"+"+".join(fy)+")"
+    L=f"((W-W/{Z})*{FX})"; Tp=f"((H-H/{Z})*{FY})"; R=f"({L}+W/{Z})"; Bt=f"({Tp}+H/{Z})"
+    fc.append(f"[b1]perspective=x0='{L}':y0='{Tp}':x1='{R}':y1='{Tp}':x2='{L}':y2='{Bt}':x3='{R}':y3='{Bt}':interpolation=cubic:sense=source:eval=frame[bz]")
+    cur="bz"
 for j,(fn,st,du,fi,fo) in enumerate(events):
     fades=(f"fade=t=in:st=0:d={fi}:alpha=1," if fi>0 else "")+f"fade=t=out:st={du-fo}:d={fo}:alpha=1"
     fc.append(f"[{j+2}:v]format=rgba,{fades},setpts=PTS+{st}/TB[o{j}]")
