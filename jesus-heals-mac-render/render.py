@@ -32,10 +32,20 @@ args=['ffmpeg','-y','-v','error','-stats','-stream_loop','-1','-i',B+'/'+os.envi
       '-loop','1','-framerate','24','-t',f"{TOT:.2f}",'-i',A+os.environ.get('DUSK','dusk.png')]
 for e in events: args+=['-loop','1','-framerate','24','-t',str(e[2]),'-i',e[0]]
 args+=['-i',AUD]
-PLATE=os.environ.get('PLATE')  # optional sharp city plate (RGBA, loop size) composited into the windows
-if PLATE: args+=['-loop','1','-framerate','24','-i',PLATE]
+PLATE=os.environ.get('PLATE')  # optional sharp city plate (RGB, loop size), masked into the windows
+GAIN=os.environ.get('GAIN','1')!='0'  # animate city lights (twinkle / on-off / colour) with assets/citylights_gain.mp4
+pre=[]
+if PLATE:
+    P0=len(events)+3
+    args+=['-loop','1','-framerate','24','-i',PLATE,'-loop','1','-framerate','24','-i',A+'window_plate_mask.png']
+    if GAIN:
+        args+=['-stream_loop','-1','-i',A+'citylights_gain.mp4']
+        pre+=[f"[{P0}:v]format=gbrp[pa]",f"[{P0+2}:v]format=gbrp[ga]","[pa][ga]blend=all_mode=multiply,format=rgba[pm]"]
+    else:
+        pre+=[f"[{P0}:v]format=rgba[pm]"]
+    pre+=[f"[{P0+1}:v]format=gray[mk]","[pm][mk]alphamerge[pl]","[0:v][pl]overlay=0:0[lp]"]
 SRCV='lp' if PLATE else '0:v'
-fc=([f"[{len(events)+3}:v]format=rgba[pl]","[0:v][pl]overlay=0:0:eof_action=repeat[lp]"] if PLATE else [])+[f"[{SRCV}]scale=1920:1080:flags=lanczos,setsar=1,fps=24,format=yuv420p[b0]",
+fc=pre+[f"[{SRCV}]scale=1920:1080:flags=lanczos,setsar=1,fps=24,format=yuv420p[b0]",
     f"[1:v]format=rgba,fade=t=in:st=0:d={TOT:.2f}:alpha=1[dk]",
     "[b0][dk]overlay=0:0:eof_action=pass[b1]"]
 cur="b1"
