@@ -46,6 +46,10 @@ def shadowed(fn,blur=10,k=0.8):
 def spaced(d,text,f,y,fill,sp,cx=W/2):
     ws=[d.textlength(c,font=f) for c in text]; x=cx-(sum(ws)+sp*(len(text)-1))/2
     for c,w in zip(text,ws): d.text((x,y),c,font=f,fill=fill); x+=w+sp
+def band(y0,y1,a=0.42):
+    # soft dark band behind the text so it reads on a bright golden sky
+    m=Image.new("L",(W,H),0); ImageDraw.Draw(m).rounded_rectangle((260,y0,W-260,y1),radius=80,fill=int(255*a))
+    m=m.filter(ImageFilter.GaussianBlur(70)); im=Image.new("RGBA",(W,H),(20,12,6,0)); im.putalpha(m); return im
 def verse(ref,text,out):
     body=font("CormorantGaramond.ttf",54,600); rf=font("PlayfairDisplay.ttf",28,700)
     lines=textwrap.wrap(text,44)
@@ -54,13 +58,14 @@ def verse(ref,text,out):
         y=106
         for ln in lines:
             tw=d.textlength(ln,font=body); d.text(((W-tw)/2,y),ln,font=body,fill=(255,255,255,248)); y+=66
-    shadowed(draw).save(out)
+    tx=shadowed(draw,12,1.0); tx=Image.alpha_composite(shadowed(draw,4,0.7),tx)
+    Image.alpha_composite(band(40,130+66*len(lines)),tx).save(out)
 def title(out):
     t=font("PlayfairDisplay.ttf",132); r=font("PlayfairDisplay.ttf",40,700)
     def draw(d):
         spaced(d,"THANKFUL",t,330,(255,255,255,255),40)
         spaced(d,"PSALM 100:4",r,520,GOLD,16)
-    shadowed(draw,14,0.85).save(out)
+    Image.alpha_composite(band(300,600,0.38),shadowed(draw,14,1.0)).save(out)
 def cta(kind,out):
     img=Image.new("RGBA",(W,H),(0,0,0,0)); d=ImageDraw.Draw(img)
     t=CTA[kind]; f=font("PlayfairDisplay.ttf",28)
