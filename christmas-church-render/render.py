@@ -35,7 +35,7 @@ if not os.path.exists(AUD):
     args+=['-filter_complex',';'.join(fc),'-map','[aout]','-t',f"{FULL:.2f}",'-c:a','aac','-b:a','192k','-ar','48000',AUD+".tmp.m4a"]
     subprocess.run(args,check=True); os.rename(AUD+".tmp.m4a",AUD)
 # 2) video + mux
-events=[(A+("title_10min.png" if SHORT else "title.png"),0,4,0,2.5)]   # hover hook: cover title, fades out 1.5-4 s
+events=[(A+("intro_cover.png" if SHORT else "title.png"),0,3,0,1.5)]   # hover hook: frame 1 = exact cover B, fades 1.5-3 s into the same framing
 if SHORT:
     events+=[(A+f"v{k:02d}.png",40+100*i,22,2,2) for i,k in enumerate(range(6))]  # Luke 2:11 first
     events+=[(A+f"cta_{k}.png",s,8,1,1.5) for k,s in (("amen",95),("sub",295),("share",495))]
@@ -59,6 +59,8 @@ if os.environ.get('ZOOM','1')!='0':
         u=f"clip(({T}-{a})/{b-a},0,1)"; return f"({u}*{u}*(3-2*{u}))"
     targets=[(0.55,0.72),(0.57,0.22),(0.17,0.64),(0.86,0.64)]  # church door, steeple, left cottages, right cottage
     zt=["0"]; fx=["0"]; fy=["0"]
+    if SHORT:  # intro: start on cover B framing (crop 80% wide at 0.55,0.58), ease out to the full view 3-7 s
+        env=f"(1-{sm(3,7)})"; zt.append(f"0.25*{env}"); fx.append(f"0.25*{env}"); fy.append(f"0.4*{env}")
     for i in range(10):
         s=(150+200*i) if SHORT else 270+540*i; tx,ty=targets[i%4]
         if s+46>FULL-30: continue
