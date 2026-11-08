@@ -1,0 +1,54 @@
+EMMANUEL - Christmas cafe 10-MINUTE TEST: upload notes (YouTube Studio)
+File: "Emmanuel Christmas Cafe 10 Min (upload).mp4" (11:55, 1080p, 48kHz)
+
+TITLE (vidIQ scores, 2026-11-08)
+  97  10 Minutes of Christmas Peace | Silent Night by the Fire in New York   <- use this
+  83  Silent Night in a Snowy New York Café | Christmas Worship & Scripture
+
+CATEGORY: Music. Not made for kids. Altered/synthetic content: YES.
+THUMBNAIL: "Emmanuel cover 10 min (YouTube 1280x720).jpg"
+PUBLISH: the next open 7:00pm PR slot (Jose's call).
+
+DESCRIPTION
+Take ten quiet minutes with Jesus this Christmas. Settle into a cozy New York café on a snowy night: the fire glows, the lights twinkle on the street outside, and the Bible lies open beside the nativity, while soft piano, saxophone and flute play Silent Night and What Child Is This.
+
+"For unto you is born this day in the city of David a Saviour, which is Christ the Lord." (Luke 2:11, KJV)
+
+Whatever this season holds, you are not alone. His name is Emmanuel, God with us.
+
+A prayer for this Christmas:
+Lord Jesus, thank You for coming to us. Quiet my heart in this busy season. Fill my home with Your peace, and help me make room for You, as there was no room in the inn. Be near to everyone who feels alone tonight. Amen.
+
+Use these 10 minutes for:
+- A Christmas prayer break
+- Reading your Bible by the fire
+- A calm start or end to your day
+
+Scriptures in this video (KJV):
+"For unto you is born this day in the city of David a Saviour, which is Christ the Lord." (Luke 2:11, KJV)
+
+"Behold, a virgin shall be with child, and shall bring forth a son, and they shall call his name Emmanuel, which being interpreted is, God with us." (Matthew 1:23, KJV)
+
+"Glory to God in the highest, and on earth peace, good will toward men." (Luke 2:14, KJV)
+
+"For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life." (John 3:16, KJV)
+
+"And she brought forth her firstborn son, and wrapped him in swaddling clothes, and laid him in a manger; because there was no room for them in the inn." (Luke 2:7, KJV)
+
+"For unto us a child is born, unto us a son is given: and the government shall be upon his shoulder: and his name shall be called Wonderful, Counsellor, The mighty God, The everlasting Father, The Prince of Peace." (Isaiah 9:6, KJV)
+
+Chapters:
+0:00 Silent Night
+5:54 What Child Is This
+
+If you believe Jesus is Emmanuel, God with us, comment AMEN! 🙏
+
+#christmasworship #silentnight #christmasmusic #pianoworship #christmascafe #emmanuel #prayer
+
+TAGS
+christmas worship, silent night, silent night instrumental, christmas piano, christmas saxophone, christmas carols instrumental, christmas cafe ambience, cozy christmas, christmas fireplace, new york christmas, snowy night, christmas prayer, bible verses christmas, emmanuel, 10 minute christmas music, peaceful christmas music, musica de navidad cristiana, villancicos instrumental, louvor de natal
+
+FIRST COMMENT (pin it): Who are you praying for this Christmas? Type their name below and let's pray for them together 🙏
+
+AFTER IT GOES LIVE: pin the comment, add the end screen (last 30s are text-free), Soaking Worship playlist.
+TEST: compare views, average view duration, % watched and CTR at 48h and 7 days with our 1h/3h videos. If it does well, render the 1-hour version on the Mac (python3 render.py).

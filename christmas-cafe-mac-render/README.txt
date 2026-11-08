@@ -13,5 +13,5 @@ What's inside:
   assets/lights_*     random lights going off/on near the window and on the tree
   assets/v00-v09.png  10 KJV nativity verses (every 6 min from 1:00), cta_*.png small cards at 10, 30, 50 min
   make_overlays.py / make_lights.py rebuild the assets (cloud side, need Pillow + numpy)
-Options: DUR=90 (short test), CRF=16 (higher quality), ZOOM=0 (no camera moments), FIRE_DB=14 (crackle level).
+Options: DUR=90 (short test), CRF=16 (higher quality), ZOOM=0 (no camera moments), FIRE_DB=-2 (crackle level; Jose wants it as low as possible).
 Upload notes, title, description, tags and subtitles: "Upload notes.txt", "Emmanuel verses (English subtitles).srt".

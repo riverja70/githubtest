@@ -16,7 +16,9 @@ STRIP="1 HOUR  |  SOFT PIANO CHRISTMAS CAROLS  |  SCRIPTURE BY THE FIRE"
 def spaced(d,text,f,y,fill,spc):
     ws=[d.textlength(c,font=f) for c in text]; x=(W-(sum(ws)+spc*(len(text)-1)))/2
     for c,w in zip(text,ws): d.text((x,y),c,font=f,fill=fill); x+=w+spc
-def title_layer(strip=True):
+def title_layer(strip=True,text=None):
+    global STRIP
+    if text: STRIP=text
     tf=font("PlayfairDisplay.ttf",132); rf=font("PlayfairDisplay.ttf",42,800); sf=font("PlayfairDisplay.ttf",34)
     txt=Image.new("RGBA",(W,H),(0,0,0,0)); d=ImageDraw.Draw(txt)
     spaced(d,TITLE,tf,60,(255,255,255,255),40); spaced(d,REF,rf,248,(250,210,120,255),16)
@@ -68,6 +70,11 @@ if __name__=="__main__":
     cov=Image.alpha_composite(still.convert("RGBA"),title_layer()).convert("RGB")
     cov.save(A+"cover.jpg",quality=93); cov.resize((1280,720),Image.LANCZOS).save(A+"cover_1280.jpg",quality=92)
     title_layer().save(A+"title.png")   # hover hook: frame 1 = exact cover, fades out over the first seconds
+    S10="CHRISTMAS PIANO CAROLS  |  SCRIPTURE BY THE FIRE"
+    title_layer(text=S10).save(A+"title_10min.png")
+    c10=Image.alpha_composite(still.convert("RGBA"),title_layer(text=S10)).convert("RGB")
+    c10.save(A+"cover_10min.jpg",quality=93); c10.resize((1280,720),Image.LANCZOS).save(A+"cover_10min_1280.jpg",quality=92)
+    STRIP_1H="1 HOUR  |  SOFT PIANO CHRISTMAS CAROLS  |  SCRIPTURE BY THE FIRE"; title_layer(text=STRIP_1H)
     for i,(t,r) in enumerate(VERSES): verse(t,r,A+f"v{i:02d}.png")
     for k in ("sub","share","amen"): cta(k,A+f"cta_{k}.png")
     print("ok")
