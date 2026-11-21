@@ -21,7 +21,15 @@ for line in open(B+"/music_list.txt"):
         print("downloading",k,name); subprocess.run(["curl","-fsSL","--retry","3","-o",fn+".part",url],check=True); os.rename(fn+".part",fn)
     ROWS.append((fn,name,float(ss),float(gain),mode))
 dur=lambda f: float(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','csv=p=0',f]))
-D={r[0]:dur(r[0])-r[2] for r in ROWS}
+import re
+def tail_end(f):
+    # cut trailing silence (some tracks end with 2-5s of dead air) so crossfades never dip
+    d=dur(f); r=subprocess.run(['ffmpeg','-nostats','-i',f,'-af','silencedetect=n=-50dB:d=0.5','-f','null','-'],capture_output=True,text=True).stderr
+    st=[float(x) for x in re.findall(r'silence_start: ([0-9.]+)',r)]; en=[float(x) for x in re.findall(r'silence_end: ([0-9.]+)',r)]
+    if st and (len(en)<len(st) or en[-1]>=d-0.1): return min(d,st[-1]+0.4)
+    return d
+TE={r[0]:tail_end(r[0]) for r in ROWS}
+D={r[0]:TE[r[0]]-r[2] for r in ROWS}
 order=[]; tot=0
 while tot<GOAL:
     r=ROWS[len(order)%len(ROWS)]; order.append(r); tot=sum(D[x[0]] for x in order)-XF*(len(order)-1)
@@ -46,7 +54,7 @@ if not os.path.exists(AUD):
     n=len(order); fc=[]
     for k,r in enumerate(order):
         lev="dynaudnorm=f=3000:g=31:m=3:p=0.5:t=0.001," if r[4]=="dyn" else ""
-        fc.append(f"[{k}:a]aresample=48000,aformat=channel_layouts=stereo,adeclick,{lev}acompressor=threshold=0.125:ratio=2.5:attack=300:release=2500:knee=6,volume={r[3]}dB,afade=t=in:d=1[a{k}]")
+        fc.append(f"[{k}:a]atrim=end={D[r[0]]:.3f},asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo,adeclick,{lev}acompressor=threshold=0.125:ratio=2.5:attack=300:release=2500:knee=6,volume={r[3]}dB,afade=t=in:d=1[a{k}]")
     prev="a0"
     for k in range(1,n): fc.append(f"[{prev}][a{k}]acrossfade=d={XF}:c1=tri:c2=tri[x{k}]"); prev=f"x{k}"
     fc.append(f"[{prev}]volume=2.5dB,alimiter=limit=0.7:attack=5:release=200:level=false,afade=t=out:st={TOT-6:.2f}:d=6,aresample=48000[aout]")
