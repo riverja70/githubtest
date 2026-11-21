@@ -1,0 +1,34 @@
+S01|Let There Be Light|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-6827-71ef-ae87-2d8f6f7dea4a.mp3|0|-5.1|
+E1|Elohim|https://d8j0ntlcm91z4.cloudfront.net/user_3JcW77wf9pF7M24fYOO8Hrhzs4i/hf_20261121_014923_e6528883-2b04-4405-a848-aab76981d52a.mp3|0|2.0|dyn
+S02|The Firmament|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-6ac3-72d0-8bc9-382145b06f58.mp3|0|-5.6|
+S03|Still Waters|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-6d1a-701d-b54b-bae6cc5fdb9c.mp3|0|-5.7|
+S04|Green Pastures|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-6fc2-70b5-9269-ce8dbddbcb6c.mp3|0|-4.5|
+S05|The Lord Is My Shepherd|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-7263-7233-a203-d35e3079f738.mp3|0|-5.9|
+E2|In the Beginning|https://d8j0ntlcm91z4.cloudfront.net/user_3JcW77wf9pF7M24fYOO8Hrhzs4i/hf_20261121_014922_afe2b179-c26d-44b2-93c1-6001f73cf943.mp3|0|3.6|dyn
+S06|Morning Star|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-74be-725d-ac7f-ca54f82eff0f.mp3|0|-5.1|
+S07|The Heavens Declare|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-7725-72c5-8f50-e89535558026.mp3|0|-4.4|
+S08|Under His Wings|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-7953-7379-8180-a7cfca27651c.mp3|0|-5.4|
+S09|Be Still|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-7bec-701b-83fd-420caa17be35.mp3|0|-5.0|
+S10|Dwelling Place|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-7e92-7252-83ae-8a15fa4f8a7b.mp3|0|-5.7|
+E3|The Spirit Moved Upon the Waters|https://d8j0ntlcm91z4.cloudfront.net/user_3JcW77wf9pF7M24fYOO8Hrhzs4i/hf_20261121_014922_ecea354b-b1d8-449b-a34b-eea8b14d760f.mp3|0|4.4|dyn
+S11|Rivers of Living Water|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-80b0-7118-8852-3602e5404f89.mp3|0|-5.4|
+S12|Evening Sacrifice|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbce-830a-707e-95cd-2df2defbb36c.mp3|0|-5.1|
+S13|Thou Art Worthy|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-39a3-70e4-9c5d-61ec04324f3c.mp3|0|-5.6|
+S14|Quiet Resting Places|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-3c1a-7140-8514-fb73d578c364.mp3|0|-5.6|
+S15|Shadow of the Almighty|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-3ef3-70f8-93d3-a53d0e0d9e66.mp3|0|-5.4|
+E4|The King's Harp|https://d8j0ntlcm91z4.cloudfront.net/user_3JcW77wf9pF7M24fYOO8Hrhzs4i/hf_20261121_014922_33442beb-e24b-4881-afb3-1df4d6caca9a.mp3|0|6.5|dyn
+S16|Lift Up Mine Eyes|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-413d-72af-b929-7da716824c3b.mp3|0|-5.0|
+S17|Peace Like a River|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-439c-7005-99f7-2e65631abf32.mp3|0|-5.4|
+S18|Garden of Eden|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-464c-72d7-83fb-4fbcd238106e.mp3|0|-4.8|
+S19|My Cup Runneth Over|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-4914-704f-96e2-8339fba2da5e.mp3|0|-5.9|
+S20|Sabbath Rest|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-4b93-72e3-8099-48665c9a733c.mp3|0|-5.2|
+E5|He Restoreth My Soul|https://d8j0ntlcm91z4.cloudfront.net/user_3JcW77wf9pF7M24fYOO8Hrhzs4i/hf_20261121_014922_661c7ad0-86df-4178-a89d-613fa03e3e32.mp3|104.5|1.6|dyn
+S21|Holy, Holy, Holy|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-4e23-725a-a263-813f464e9310.mp3|0|-5.2|
+S22|New Every Morning|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-5071-7154-85c5-601a5ac82055.mp3|0|-5.1|
+S23|The Sea Is His|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-52fc-7028-b153-64eaea4aface.mp3|0|-5.3|
+S24|Song of David|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd1-5550-732a-b5bd-74606bd3c41a.mp3|0|-5.2|
+E6|Heaven and Earth|https://d8j0ntlcm91z4.cloudfront.net/user_3JcW77wf9pF7M24fYOO8Hrhzs4i/hf_20261121_014922_5f563240-a41f-47b4-8a9c-1cb8f1d65e5a.mp3|0|5.2|dyn
+S25|Day Unto Day|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd2-adbd-7366-a3f3-f452021816ff.mp3|0|-5.6|
+S26|Wonderfully Made|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd2-b08a-734d-b3f8-8ed6fd6d45b8.mp3|0|-5.1|
+S27|The Everlasting Arms|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd2-b2e3-7047-9a77-47714785f2e4.mp3|0|-4.9|
+S28|Light of the World|https://storage.contentcreatortemplates.com/storage/v1/object/public/test/01a1fbd2-b568-71f3-b28b-44814e97dcdf.mp3|0|-4.7|
