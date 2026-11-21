@@ -1,8 +1,9 @@
 ELOHIM HARP 3 Hour - full-quality Mac render kit (2026-11-21)
 Run (in this folder):  caffeinate -dimsu python3 render.py
   - first downloads the 34 harp tracks (music_list.txt, ~185 MB) with curl, then renders
-  - Cover choice: COVER=B (PRAISE HIM, default) or COVER=A (ELOHIM):  COVER=A caffeinate -dimsu python3 render.py
-  - Output: "ELOHIM Harp 3 Hour (HQ).mp4", 1920x1080 24fps, H.264 CRF 19, AAC 192k 48kHz, about 3:01, ~-20 LUFS
+  - Cover/opening: COVER=A (ELOHIM, default) or COVER=B (PRAISE HIM)
+  - Halfway (about 1:33:31, at the 'Peace Like a River' track change) the terrace slowly dissolves (12s) into the palace hall loop (loops/hall.mp4)
+  - Output: "ELOHIM Harp 3 Hour (HQ).mp4", 1920x1080 24fps, H.264 CRF 19, AAC 192k 48kHz, about 3:08, ~-20 LUFS
   - writes chapters.txt (already pasted into the upload notes)
 Quick check first (optional, ~2 min):  TEST=150 python3 render.py test.mp4
 Inside: loops/master.mp4 (seamless 9.5s King David harp loop), loops/opening_A/B.mp4 (cover melts into the scene),

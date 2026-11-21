@@ -6,10 +6,11 @@
 # Audio: music_list.txt in order (6 ElevenLabs + 28 Suno harp tracks), then repeats from the top until 3h,
 #   5s crossfades, per-track linear gain to about -20 LUFS (ElevenLabs tracks also get slow leveling for swells),
 #   gentle compressor, final limiter, 48kHz AAC 192k. Writes chapters.txt.
-# Options (env): COVER=B (or A)  CRF=19 PRESET=slow ZOOM=0 (no close-ups) TEST=600 (first N seconds) GOAL=10800
+# Second half: slow 12s dissolve (at a track change near the middle) into the palace hall loop (loops/hall.mp4).
+# Options (env): COVER=A (or B)  SWITCH=<sec>  CRF=19 PRESET=slow ZOOM=0 (no close-ups) TEST=600 (first N seconds) GOAL=10800
 import os, sys, glob, subprocess
 B=os.path.dirname(os.path.abspath(__file__)); A=B+"/assets/"
-CRF=os.environ.get("CRF","19"); PRESET=os.environ.get("PRESET","slow"); COVER=os.environ.get("COVER","B")
+CRF=os.environ.get("CRF","19"); PRESET=os.environ.get("PRESET","slow"); COVER=os.environ.get("COVER","A")
 OUT=sys.argv[1] if len(sys.argv)>1 else B+"/ELOHIM Harp 3 Hour (HQ).mp4"
 XF=5.0; GOAL=float(os.environ.get("GOAL",3*3600))
 os.makedirs(B+"/music",exist_ok=True)
@@ -61,31 +62,41 @@ if not os.path.exists(AUD):
     args+=['-filter_complex',';'.join(fc),'-map','[aout]','-t',f"{TOT:.2f}",'-c:a','aac','-b:a','192k','-ar','48000',AUD+".tmp.m4a"]
     subprocess.run(args,check=True); os.rename(AUD+".tmp.m4a",AUD)
 # 2) video
-args=['ffmpeg','-y','-v','error','-stats','-stream_loop','-1','-i',B+'/loops/master.mp4','-i',B+f'/loops/opening_{COVER}.mp4']
+# palace hall switch: the track change nearest the middle that is clear of verse cards and close-ups
+starts=[]; s0=0
+for r in order: starts.append(s0); s0+=D[r[0]]-XF
+def busy(t): return any(abs(t-(60+540*i+12))<30 or (330+540*i-20<t<330+540*i+66) for i in range(21))
+cands=[t+XF/2 for t in starts[1:] if not busy(t+XF/2)] or [TOT/2]
+SW=min(cands,key=lambda t:abs(t-TOT/2)) if not TEST else min(TEST*0.5,TOT/2)
+SW=float(os.environ.get("SWITCH",SW)); DIS=12.0; print("palace hall dissolve at %d:%02d:%02d"%(SW//3600,SW%3600//60,SW%60))
+args=['ffmpeg','-y','-v','error','-stats','-stream_loop','-1','-i',B+'/loops/master.mp4','-i',B+f'/loops/opening_{COVER}.mp4','-stream_loop','-1','-i',B+'/loops/hall.mp4']
 events=[(A+f"v{i:02d}.png",60+540*i,25,2,2) for i in range(20)]
 kinds=["sub","share","amen"]; events+=[(A+f"cta_{kinds[k%3]}.png",180+1620*k,8,1,1.5) for k in range(7)]
 events=[e for e in events if e[1]+e[2]<=TOT-20]
 for e in events: args+=['-loop','1','-framerate','24','-t',str(e[2]),'-i',e[0]]
-AI=2+len(events); args+=['-i',AUD]
-fc=["[0:v]fps=24,setsar=1,format=yuv420p[base]","[1:v]fps=24,setsar=1,format=yuv420p[op]","[base][op]overlay=0:0:eof_action=pass[b0]"]
+AI=3+len(events); args+=['-i',AUD]
+fc=["[0:v]fps=24,setsar=1,format=yuv420p[t0]",f"[2:v]fps=24,setsar=1,format=yuva420p,fade=t=in:st={SW-DIS/2:.2f}:d={DIS}:alpha=1[hall]",
+    f"[t0][hall]overlay=0:0:enable='gte(t,{SW-DIS/2:.2f})'[base]","[1:v]fps=24,setsar=1,format=yuv420p[op]","[base][op]overlay=0:0:eof_action=pass[b0]"]
 cur="b0"
 if os.environ.get('ZOOM','1')!='0':
     T="(in/24)"
     def sm(a,b):
         u=f"clip(({T}-{a})/{b-a},0,1)"; return f"({u}*{u}*(3-2*{u}))"
-    targets=[(0.56,0.58),(0.22,0.45),(0.36,0.62),(0.62,0.40)]   # hands on strings, waterfall, sea and beach, harp and crown
+    targets=[(0.56,0.58),(0.22,0.45),(0.36,0.62),(0.62,0.40)]   # terrace: hands on strings, waterfall, sea and beach, harp and crown
+    targets2=[(0.72,0.56),(0.20,0.62),(0.66,0.48),(0.62,0.74)]  # palace hall: David at the harp, fireplace, waterfall arch, pool and candles
     zt=["0"]; fx=["0"]; fy=["0"]
     for i in range(20):
         s=330+540*i
         if s+46>TOT-30: continue
-        tx,ty=targets[i%4]; env=f"({sm(s,s+14)}-{sm(s+32,s+46)})"
+        if s-60<SW<s+60: continue
+        tx,ty=(targets2 if s>SW else targets)[i%4]; env=f"({sm(s,s+14)}-{sm(s+32,s+46)})"
         zt.append(f"0.12*{env}"); fx.append(f"{tx-0.5}*{env}"); fy.append(f"{ty-0.5}*{env}")
     Z="(1+"+"+".join(zt)+")"; FX="(0.5+"+"+".join(fx)+")"; FY="(0.5+"+"+".join(fy)+")"
     Lf=f"((W-W/{Z})*{FX})"; Tp=f"((H-H/{Z})*{FY})"; R=f"({Lf}+W/{Z})"; Bt=f"({Tp}+H/{Z})"
     fc.append(f"[{cur}]perspective=x0='{Lf}':y0='{Tp}':x1='{R}':y1='{Tp}':x2='{Lf}':y2='{Bt}':x3='{R}':y3='{Bt}':interpolation=cubic:sense=source:eval=frame[bz]"); cur="bz"
 for j,(fn,st,du,fi,fo) in enumerate(events):
     fades=(f"fade=t=in:st=0:d={fi}:alpha=1," if fi>0 else "")+f"fade=t=out:st={du-fo}:d={fo}:alpha=1"
-    fc.append(f"[{j+2}:v]scale=1920:1080,setsar=1,format=rgba,{fades},setpts=PTS+{st}/TB[o{j}]")
+    fc.append(f"[{j+3}:v]scale=1920:1080,setsar=1,format=rgba,{fades},setpts=PTS+{st}/TB[o{j}]")
     fc.append(f"[{cur}][o{j}]overlay=0:0:eof_action=pass[c{j}]"); cur=f"c{j}"
 fc.append(f"[{cur}]format=yuv420p[vout]")
 args+=['-filter_complex',';'.join(fc),'-map','[vout]','-map',f'{AI}:a','-t',f"{LEN:.2f}",
