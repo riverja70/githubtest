@@ -9,7 +9,8 @@ def frames(path,n):
     return np.frombuffer(raw,np.uint8).reshape(-1,H,W,3)
 veo=frames("loops/veo_open.mp4",N); loop=frames("loops/master.mp4",N)
 sm=lambda u:(lambda c:c*c*(3-2*c))(min(1,max(0,u)))
-for tag in "AB":
+import sys
+for tag in (sys.argv[1] if len(sys.argv)>1 else "ABC"):
     cov=np.asarray(Image.open(f"covers/cover_{tag}.jpg").convert("RGB").resize((W,H))).astype(np.float32)
     enc=subprocess.Popen(["ffmpeg","-nostdin","-loglevel","error","-y","-f","rawvideo","-pix_fmt","rgb24","-s",f"{W}x{H}","-r",str(FPS),"-i","-","-c:v","libx264","-preset","slow","-crf","14","-pix_fmt","yuv420p",f"loops/opening_{tag}.mp4"],stdin=subprocess.PIPE)
     for i in range(N):

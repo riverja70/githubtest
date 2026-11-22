@@ -7,10 +7,12 @@
 #   5s crossfades, per-track linear gain to about -20 LUFS (ElevenLabs tracks also get slow leveling for swells),
 #   gentle compressor, final limiter, 48kHz AAC 192k. Writes chapters.txt.
 # Second half: slow 12s dissolve (at a track change near the middle) into the palace hall loop (loops/hall.mp4).
-# Options (env): COVER=A (or B)  SWITCH=<sec>  CRF=19 PRESET=slow ZOOM=0 (no close-ups) TEST=600 (first N seconds) GOAL=10800
+# Opening minute (Winning Long-Video Formula): if assets/intro_voice.mp3 exists, Adam reads one KJV verse + a short prayer
+#   from 3s while the music dips 10 dB, then the music comes back up.
+# Options (env): COVER=C (default; or A, B)  SWITCH=<sec>  CRF=19 PRESET=slow ZOOM=0 (no close-ups) TEST=600 (first N seconds) GOAL=10800
 import os, sys, glob, subprocess
 B=os.path.dirname(os.path.abspath(__file__)); A=B+"/assets/"
-CRF=os.environ.get("CRF","19"); PRESET=os.environ.get("PRESET","slow"); COVER=os.environ.get("COVER","A")
+CRF=os.environ.get("CRF","19"); PRESET=os.environ.get("PRESET","slow"); COVER=os.environ.get("COVER","C")
 OUT=sys.argv[1] if len(sys.argv)>1 else B+"/ELOHIM Harp 3 Hour (HQ).mp4"
 XF=5.0; GOAL=float(os.environ.get("GOAL",3*3600))
 os.makedirs(B+"/music",exist_ok=True)
@@ -61,6 +63,17 @@ if not os.path.exists(AUD):
     fc.append(f"[{prev}]volume=2.5dB,alimiter=limit=0.7:attack=5:release=200:level=false,afade=t=out:st={TOT-6:.2f}:d=6,aresample=48000[aout]")
     args+=['-filter_complex',';'.join(fc),'-map','[aout]','-t',f"{TOT:.2f}",'-c:a','aac','-b:a','192k','-ar','48000',AUD+".tmp.m4a"]
     subprocess.run(args,check=True); os.rename(AUD+".tmp.m4a",AUD)
+# 1b) opening voice (KJV verse + short prayer) over the first minute, music ducked under it
+IV=A+"intro_voice.mp3"
+if os.path.exists(IV):
+    vd=dur(IV); VS=3.0; e=VS+vd+1.0
+    g=f"if(lt(t,{VS-1.5}),1,if(lt(t,{VS}),1-0.68*(t-{VS-1.5})/1.5,if(lt(t,{e}),0.32,if(lt(t,{e+3}),0.32+0.68*(t-{e})/3,1))))"
+    AUDV=AUD.replace(".m4a","_voice.m4a")
+    if not os.path.exists(AUDV):
+        subprocess.run(['ffmpeg','-y','-v','error','-stats','-i',AUD,'-i',IV,'-filter_complex',
+            f"[0:a]volume='{g}':eval=frame[m];[1:a]aresample=48000,aformat=channel_layouts=stereo,loudnorm=I=-17:TP=-2:LRA=7,aresample=48000,adelay={int(VS*1000)}|{int(VS*1000)}[v];[m][v]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.89:level=false[a]",
+            '-map','[a]','-c:a','aac','-b:a','192k','-ar','48000',AUDV+".tmp.m4a"],check=True); os.rename(AUDV+".tmp.m4a",AUDV)
+    AUD=AUDV; print("opening voice %.1fs from %.0fs"%(vd,VS))
 # 2) video
 # palace hall switch: the track change nearest the middle that is clear of verse cards and close-ups
 starts=[]; s0=0
