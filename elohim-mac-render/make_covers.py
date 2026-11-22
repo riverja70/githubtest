@@ -51,34 +51,37 @@ make("Cover A ELOHIM", "ELOHIM", "GENESIS 1:1", "3 HOURS  |  HARP WORSHIP")
 make("Cover B PRAISE", "PRAISE HIM", "PSALM 150:3", "3 HOURS  |  HARP WORSHIP", size=118, sp=14)
 
 # Cover C (Winning Long-Video Formula, Jose 2026-11-22): huge white serif Name of God + script subtitle + small 3 HOURS tag
-def make_c(name="Cover C ELOHIM Davids Harp", cx=540, wy=120, size=205, sp=10):
+B4K = __import__("os").path.dirname(__import__("os").path.abspath(__file__)) + "/covers/cover_C.jpg"
+def make_c(name="Cover C ELOHIM Davids Harp", S=2):
+    W, H = 1920*S, 1080*S; cx, wy, size, sp = 540*S, 120*S, 205*S, 10*S
     img = Image.open(SRC).convert("RGB").resize((W, H), Image.LANCZOS)
     glow = Image.new("L", (W, H), 0); gd = ImageDraw.Draw(glow)
-    gd.ellipse((cx - 640, wy - 140, cx + 640, wy + 470), fill=165)
-    glow = glow.filter(ImageFilter.GaussianBlur(130))
+    gd.ellipse((cx - 640*S, wy - 140*S, cx + 640*S, wy + 470*S), fill=165)
+    glow = glow.filter(ImageFilter.GaussianBlur(130*S))
     img = Image.composite(Image.new("RGB", (W, H), (34, 24, 10)), img, glow)
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(layer)
     sh = Image.new("RGBA", (W, H), (0, 0, 0, 0)); sd = ImageDraw.Draw(sh)
     f_word = ImageFont.truetype(FONTS + "CormorantGaramond.ttf", size)
     try: f_word.set_variation_by_name("SemiBold")
     except Exception: pass
-    f_script = ImageFont.truetype(FONTS + "GreatVibes-Regular.ttf", 120)
-    f_strip = ImageFont.truetype(FONTS + "CormorantGaramond.ttf", 38)
+    f_script = ImageFont.truetype(FONTS + "GreatVibes-Regular.ttf", 120*S)
+    f_strip = ImageFont.truetype(FONTS + "CormorantGaramond.ttf", 38*S)
     try: f_strip.set_variation_by_name("Bold")
     except Exception: pass
     spaced(d, (cx, wy), "ELOHIM", f_word, sp, (255, 255, 255, 255), shadow=sd)
-    sy = wy + size + 10
+    sy = wy + size + 10*S
     tw = d.textlength("David's Harp", font=f_script)
     sd.text((cx - tw / 2, sy), "David's Harp", font=f_script, fill=(0, 0, 0, 170))
     d.text((cx - tw / 2, sy), "David's Harp", font=f_script, fill=(240, 205, 125, 255))
-    ty = sy + 175
-    tw = spaced(d, (cx, ty), "3 HOURS  |  SOAKING WORSHIP", f_strip, 7, (255, 252, 242, 240), shadow=sd)
-    d.line((cx - tw / 2 - 30, ty - 14, cx + tw / 2 + 30, ty - 14), fill=(240, 205, 125, 210), width=2)
-    d.line((cx - tw / 2 - 30, ty + 54, cx + tw / 2 + 30, ty + 54), fill=(240, 205, 125, 210), width=2)
-    sh = sh.filter(ImageFilter.GaussianBlur(7))
+    ty = sy + 175*S
+    tw = spaced(d, (cx, ty), "3 HOURS  |  SOAKING WORSHIP", f_strip, 7*S, (255, 252, 242, 240), shadow=sd)
+    d.line((cx - tw / 2 - 30*S, ty - 14*S, cx + tw / 2 + 30*S, ty - 14*S), fill=(240, 205, 125, 210), width=2*S)
+    d.line((cx - tw / 2 - 30*S, ty + 54*S, cx + tw / 2 + 30*S, ty + 54*S), fill=(240, 205, 125, 210), width=2*S)
+    sh = sh.filter(ImageFilter.GaussianBlur(7*S))
     out = Image.alpha_composite(img.convert("RGBA"), sh)
     out = Image.alpha_composite(out, layer).convert("RGB")
-    out.save(OUT + f"{name} (1920).jpg", quality=93)
+    out.save(OUT + f"{name} (4K).jpg", quality=94)
+    out.save(B4K, quality=95)
     out.resize((1280, 720), Image.LANCZOS).save(OUT + f"{name} (YouTube 1280x720).jpg", quality=92)
     return out
 

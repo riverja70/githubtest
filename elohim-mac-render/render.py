@@ -9,10 +9,11 @@
 # Second half: slow 12s dissolve (at a track change near the middle) into the palace hall loop (loops/hall.mp4).
 # Opening minute (Winning Long-Video Formula): if assets/intro_voice.mp3 exists, Adam reads one KJV verse + a short prayer
 #   from 3s while the music dips 10 dB, then the music comes back up.
-# Options (env): COVER=C (default; or A, B)  SWITCH=<sec>  CRF=19 PRESET=slow ZOOM=0 (no close-ups) TEST=600 (first N seconds) GOAL=10800
+# Options (env): COVER=C (default; or A, B)  SWITCH=<sec>  RES=2160 (4K default; 1080 = HD) CRF=19 PRESET=medium ZOOM=0 (no close-ups) TEST=600 (first N seconds) GOAL=10800
 import os, sys, glob, subprocess
 B=os.path.dirname(os.path.abspath(__file__)); A=B+"/assets/"
-CRF=os.environ.get("CRF","19"); PRESET=os.environ.get("PRESET","slow"); COVER=os.environ.get("COVER","C")
+CRF=os.environ.get("CRF","19"); PRESET=os.environ.get("PRESET","medium"); COVER=os.environ.get("COVER","C")
+RES=int(os.environ.get("RES","2160")); VH=RES; VW=RES*16//9   # 4K by default (RES=1080 for a quick HD copy)
 OUT=sys.argv[1] if len(sys.argv)>1 else B+"/ELOHIM Harp 3 Hour (HQ).mp4"
 XF=5.0; GOAL=float(os.environ.get("GOAL",3*3600))
 os.makedirs(B+"/music",exist_ok=True)
@@ -88,8 +89,8 @@ kinds=["sub","share","amen"]; events+=[(A+f"cta_{kinds[k%3]}.png",180+1620*k,8,1
 events=[e for e in events if e[1]+e[2]<=TOT-20]
 for e in events: args+=['-loop','1','-framerate','24','-t',str(e[2]),'-i',e[0]]
 AI=3+len(events); args+=['-i',AUD]
-fc=["[0:v]fps=24,setsar=1,format=yuv420p[t0]",f"[2:v]fps=24,setsar=1,format=yuva420p,fade=t=in:st={SW-DIS/2:.2f}:d={DIS}:alpha=1[hall]",
-    f"[t0][hall]overlay=0:0:enable='gte(t,{SW-DIS/2:.2f})'[base]","[1:v]fps=24,setsar=1,format=yuv420p[op]","[base][op]overlay=0:0:eof_action=pass[b0]"]
+fc=[f"[0:v]fps=24,scale={VW}:{VH}:flags=lanczos,setsar=1,format=yuv420p[t0]",f"[2:v]fps=24,scale={VW}:{VH}:flags=lanczos,setsar=1,format=yuva420p,fade=t=in:st={SW-DIS/2:.2f}:d={DIS}:alpha=1[hall]",
+    f"[t0][hall]overlay=0:0:enable='gte(t,{SW-DIS/2:.2f})'[base]",f"[1:v]fps=24,scale={VW}:{VH}:flags=lanczos,setsar=1,format=yuv420p[op]","[base][op]overlay=0:0:eof_action=pass[b0]"]
 cur="b0"
 if os.environ.get('ZOOM','1')!='0':
     T="(in/24)"
@@ -109,11 +110,11 @@ if os.environ.get('ZOOM','1')!='0':
     fc.append(f"[{cur}]perspective=x0='{Lf}':y0='{Tp}':x1='{R}':y1='{Tp}':x2='{Lf}':y2='{Bt}':x3='{R}':y3='{Bt}':interpolation=cubic:sense=source:eval=frame[bz]"); cur="bz"
 for j,(fn,st,du,fi,fo) in enumerate(events):
     fades=(f"fade=t=in:st=0:d={fi}:alpha=1," if fi>0 else "")+f"fade=t=out:st={du-fo}:d={fo}:alpha=1"
-    fc.append(f"[{j+3}:v]scale=1920:1080,setsar=1,format=rgba,{fades},setpts=PTS+{st}/TB[o{j}]")
+    fc.append(f"[{j+3}:v]scale={VW}:{VH},setsar=1,format=rgba,{fades},setpts=PTS+{st}/TB[o{j}]")
     fc.append(f"[{cur}][o{j}]overlay=0:0:eof_action=pass[c{j}]"); cur=f"c{j}"
 fc.append(f"[{cur}]format=yuv420p[vout]")
 args+=['-filter_complex',';'.join(fc),'-map','[vout]','-map',f'{AI}:a','-t',f"{LEN:.2f}",
        '-c:v','libx264','-preset',PRESET,'-tune','film','-crf',CRF,'-g','48','-bf','2','-pix_fmt','yuv420p',
-       '-profile:v','high','-c:a','copy','-movflags','+faststart',OUT]
+       '-profile:v','high','-level','5.1','-c:a','copy','-movflags','+faststart',OUT]
 subprocess.run(args,check=True)
 print("DONE",OUT,os.path.getsize(OUT)//1_000_000,"MB")
